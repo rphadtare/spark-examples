@@ -16,16 +16,22 @@ object SparkDemo {
     //Thread.sleep(100000)
 
     import spark.implicits._
-    List(("A",100),("B",102),("C",101),("D",104),("E",103),("F",101)).toDF("id","sal")
+    List(("A",100),("B",102),("C",101),("D",104),("E",103),("F",101),("F",100)).toDF("id","sal")
       .createOrReplaceTempView("employee")
 
-    spark.sql("select id,sal from employee e1 " +
+
+    /*spark.sql("select id,sal from employee e1 " +
       "where not exists" +
       "(select 1 from employee e2 where e2.sal > e1.sal)").show(false)
 
-    spark.sql("select id,sal from employee e1 " +
+    val df = spark.sql("select id,sal from employee e1 " +
       "where 2 = " +
-      "(select count(distinct sal) from employee e2 where e2.sal >= e1.sal)").show(false)
+      "(select count(distinct sal) from employee e2 where e2.sal >= e1.sal)")
+    */
+
+    val df = spark.sql("select id,count(1) as cnt from employee group by 1")
+    df.printSchema()
+
 
     spark.close()
   }
